@@ -70,9 +70,9 @@ export default function DashboardPage() {
       { subject: "Dynamic Programming", A: 0, fullMark: 150 }
     ],
     currentFocus: {
-      topic: profile?.current_focus_topic || "Getting Started",
-      progress: profile?.current_focus_progress || 0,
-      module: profile?.current_focus_module || "Introduction to Algorithms"
+      topic: "Getting Started",
+      progress: 0,
+      module: "Introduction to Algorithms"
     },
     recentApplications: applications.slice(0, 3).map(app => ({
       company: app.company,
