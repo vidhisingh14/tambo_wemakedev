@@ -54,9 +54,9 @@ export default function DashboardPage() {
     stats: {
       streak: progress?.streak || 0,
       problemsSolved: progress?.problems_solved || 0,
-      globalRank: progress?.global_rank || null
+      globalRank: progress?.global_rank || 0
     },
-    skillData: skills.length > 0 ? skills.map(skill => ({
+    skills: skills.length > 0 ? skills.map(skill => ({
       subject: skill.subject,
       A: skill.proficiency,
       fullMark: 150
@@ -69,6 +69,11 @@ export default function DashboardPage() {
       { subject: "System Design", A: 0, fullMark: 150 },
       { subject: "Dynamic Programming", A: 0, fullMark: 150 }
     ],
+    currentFocus: {
+      topic: profile?.current_focus_topic || "Getting Started",
+      progress: profile?.current_focus_progress || 0,
+      module: profile?.current_focus_module || "Introduction to Algorithms"
+    },
     recentApplications: applications.slice(0, 3).map(app => ({
       company: app.company,
       role: app.role,

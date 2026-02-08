@@ -1,7 +1,7 @@
 "use client";
 
 import { ApplicationTracker } from "@/components/tambo/application-tracker";
-import { useUserData } from "@/hooks/use-user-data";
+import { useUserData, type Application } from "@/hooks/use-user-data";
 import { supabase } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth-provider";
 import { useState } from "react";
@@ -83,25 +83,29 @@ export default function TrackerPage() {
     );
   }
 
-  const stats = {
-    total: applications.length,
-    pending: applications.filter(a => a.status === 'OA Pending').length,
-    interview: applications.filter(a => a.status === 'Interview').length,
-    offer: applications.filter(a => a.status === 'Offer').length,
-    rejected: applications.filter(a => a.status === 'Rejected').length
+  // Map database status to component status
+  const mapStatus = (dbStatus: Application['status']) => {
+    const statusMap = {
+      'Applied': 'To Apply' as const,
+      'OA Pending': 'OA/Screening' as const,
+      'Interview': 'Interviewing' as const,
+      'Offer': 'Offer' as const,
+      'Rejected': 'Rejected' as const
+    };
+    return statusMap[dbStatus];
   };
 
   const trackerData = {
-    stats,
     applications: applications.map(app => ({
+      id: app.id,
       company: app.company,
       logo: app.company_logo || `https://logo.clearbit.com/${app.company.toLowerCase().replace(/\s/g, '')}.com`,
       role: app.role,
-      location: app.location || "Remote",
-      status: app.status,
-      stage: app.stage || "",
-      nextStep: app.next_step || "",
-      appliedDate: app.applied_date ? new Date(app.applied_date).toLocaleDateString() : ""
+      location: app.location || undefined,
+      status: mapStatus(app.status),
+      date: app.applied_date ? new Date(app.applied_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : "Added today",
+      tags: [], // TODO: Add tags support in database
+      isRemote: app.location?.toLowerCase().includes('remote')
     }))
   };
 
