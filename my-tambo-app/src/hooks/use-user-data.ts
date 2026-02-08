@@ -62,9 +62,10 @@ export function useUserData() {
     }
 
     async function fetchUserData() {
+      if (!user) return;
       try {
         setLoading(true);
-        
+
         // Fetch profile
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
