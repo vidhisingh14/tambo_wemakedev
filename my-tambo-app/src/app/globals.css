@@ -245,13 +245,35 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Fix timer and other text in assessment header */
 [class*="timer"],
-[class*="time"],
-.text-slate-400,
-.text-slate-500 {
+[class*="time"] {
   color: #a0aec0 !important;
 }
 
-/* Make timer numbers bright and visible */
-.font-mono {
+/* Make timer numbers bright and visible - specific to timer container */
+header .font-mono {
   color: #ffffff !important;
+}
+
+/* Ensure option text is dark and visible - CRITICAL FIX */
+button span.font-mono,
+button .font-mono,
+[role="button"] span.font-mono {
+  color: #1e293b !important;
+}
+
+/* Override for dark mode option text */
+.dark button span.font-mono,
+.dark button .font-mono {
+  color: #e2e8f0 !important;
+}
+
+/* Specifically target assessment option buttons */
+button.group span.text-slate-800,
+button.group span.font-mono.text-lg {
+  color: #1e293b !important;
+}
+
+.dark button.group span.text-slate-800,
+.dark button.group span.font-mono.text-lg {
+  color: #e2e8f0 !important;
 }
