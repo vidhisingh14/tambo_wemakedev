@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pdf from 'pdf-parse';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,12 +12,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert file to buffer
+    // Convert file to buffer and extract text
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Parse PDF
-    const data = await pdf(buffer);
+    // Use dynamic import for pdf-parse to handle the ESM/CJS mismatch
+    const pdfParse = await import('pdf-parse').then(m => (m as any).default || m);
+    const data = await pdfParse(buffer);
     const text = data.text;
 
     return NextResponse.json({ text });
