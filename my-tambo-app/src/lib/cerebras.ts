@@ -38,7 +38,7 @@ Provide:
       temperature: 0.7,
     });
 
-    const content = response.choices[0].message.content;
+    const content = (response as any).choices[0].message.content;
     return content ? JSON.parse(content) : null;
   } catch (error) {
     console.error('Error analyzing resume:', error);
@@ -77,7 +77,7 @@ Recommend:
       temperature: 0.8,
     });
 
-    const content = response.choices[0].message.content;
+    const content = (response as any).choices[0].message.content;
     return content ? JSON.parse(content) : null;
   } catch (error) {
     console.error('Error generating study plan:', error);
@@ -117,7 +117,7 @@ What should the candidate do next? Provide:
       temperature: 0.7,
     });
 
-    const content = response.choices[0].message.content;
+    const content = (response as any).choices[0].message.content;
     return content ? JSON.parse(content) : null;
   } catch (error) {
     console.error('Error suggesting next step:', error);
@@ -157,7 +157,7 @@ Provide:
       temperature: 0.8,
     });
 
-    const content = response.choices[0].message.content;
+    const content = (response as any).choices[0].message.content;
     return content ? JSON.parse(content) : null;
   } catch (error) {
     console.error('Error generating interview tips:', error);

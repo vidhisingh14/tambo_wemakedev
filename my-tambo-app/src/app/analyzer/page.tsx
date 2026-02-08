@@ -1,19 +1,58 @@
 "use client";
 
 import { Analyzer } from "@/components/tambo/analyzer";
-import { useState } from "react";
-import { Upload, Sparkles } from "lucide-react";
+import { useState, useRef } from "react";
+import { Upload, Sparkles, FileText } from "lucide-react";
 
 export default function AnalyzerPage() {
   const [resumeText, setResumeText] = useState("");
+  const [resumeFileName, setResumeFileName] = useState("");
   const [targetRole, setTargetRole] = useState("Software Engineer");
   const [analyzing, setAnalyzing] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      setError('Please upload a PDF file');
+      return;
+    }
+
+    setUploading(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/extract-pdf', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to extract PDF text');
+      }
+
+      const { text } = await response.json();
+      setResumeText(text);
+      setResumeFileName(file.name);
+    } catch (err: any) {
+      console.error('PDF upload error:', err);
+      setError('Failed to extract text from PDF. Please try again or paste text manually.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleAnalyze = async () => {
     if (!resumeText.trim()) {
-      setError("Please paste your resume text");
+      setError("Please paste your resume text or upload a PDF");
       return;
     }
 
@@ -49,7 +88,8 @@ export default function AnalyzerPage() {
   // If we have analysis, show the Analyzer component
   if (analysis) {
     const analyzerData = {
-      resumeName: "Your Resume",
+      resumeName: resumeFileName || "Your Resume",
+      resumeContent: resumeText, // Pass the actual resume content
       targetRole,
       overallScore: analysis.overallScore || 0,
       keywordsFound: analysis.keywordsFound || 0,
@@ -66,6 +106,7 @@ export default function AnalyzerPage() {
           onClick={() => {
             setAnalysis(null);
             setResumeText("");
+            setResumeFileName("");
           }}
           className="text-[#0df2a6] hover:underline flex items-center gap-2"
         >
@@ -111,26 +152,68 @@ export default function AnalyzerPage() {
             />
           </div>
 
+          {/* PDF Upload */}
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-2">
-              Resume Text
+              Upload Resume (PDF)
+            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="w-full flex items-center justify-center gap-3 bg-[#0a0f0d] border-2 border-dashed border-[#22493c] rounded-lg px-4 py-6 text-slate-400 hover:border-[#0df2a6] hover:text-[#0df2a6] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {uploading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-[#0df2a6]"></div>
+                  Extracting text from PDF...
+                </>
+              ) : resumeFileName ? (
+                <>
+                  <FileText className="w-5 h-5 text-[#0df2a6]" />
+                  <span className="text-[#0df2a6]">{resumeFileName}</span>
+                  <span className="text-xs text-slate-500">(Click to change)</span>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-5 h-5" />
+                  Click to upload PDF or drag & drop
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="text-center text-sm text-slate-500">
+            - OR -
+          </div>
+
+          {/* Text Input */}
+          <div>
+            <label className="block text-sm font-medium text-slate-400 mb-2">
+              Paste Resume Text
             </label>
             <textarea
               value={resumeText}
               onChange={(e) => setResumeText(e.target.value)}
-              rows={15}
+              rows={12}
               className="w-full bg-[#0a0f0d] border border-[#22493c] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#0df2a6] font-mono text-sm"
-              placeholder="Paste your resume text here... (or upload a file below)"
+              placeholder="Or paste your resume text here..."
             />
             <p className="text-xs text-slate-500 mt-2">
-              Tip: Copy and paste the text content of your resume for best results
+              {resumeText.length > 0 ? `${resumeText.length} characters` : 'Waiting for input...'}
             </p>
           </div>
 
           <div className="flex gap-4">
             <button
               onClick={handleAnalyze}
-              disabled={analyzing}
+              disabled={analyzing || !resumeText.trim()}
               className="flex-1 flex items-center justify-center gap-2 bg-[#0df2a6] hover:bg-[#0bc98b] text-[#101010] px-6 py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {analyzing ? (
