@@ -164,3 +164,94 @@ Animated gradient for thinking text, creates a shimmering effect that moves acro
   -webkit-text-fill-color: transparent;
   animation: thinking-gradient 2s linear infinite;
 }
+
+/* Code Snippet Syntax Highlighting */
+pre code,
+.hljs {
+  color: #e6edf3 !important;
+  background: transparent !important;
+}
+
+/* Python/JavaScript Keywords */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-title,
+.hljs-section,
+.hljs-doctag,
+.hljs-name,
+.hljs-strong {
+  color: #ff7b72 !important;
+}
+
+/* Strings */
+.hljs-string,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: #a5d6ff !important;
+}
+
+/* Numbers */
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #79c0ff !important;
+}
+
+/* Comments */
+.hljs-comment,
+.hljs-quote {
+  color: #8b949e !important;
+  font-style: italic;
+}
+
+/* Built-in functions */
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #ffa657 !important;
+}
+
+/* Operators */
+.hljs-operator,
+.hljs-punctuation {
+  color: #ff7b72 !important;
+}
+
+/* Make sure code in Tambo components is readable */
+pre {
+  background: #161b22 !important;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+pre code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Fix question text color in assessments */
+h1, h2, h3, h4, h5, h6 {
+  color: #e6edf3 !important;
+}
+
+/* Ensure question text is readable */
+[class*="question"],
+[class*="title"] {
+  color: #e6edf3 !important;
+}
+
+/* Fix timer and other text in assessment header */
+[class*="timer"],
+[class*="time"],
+.text-slate-400,
+.text-slate-500 {
+  color: #a0aec0 !important;
+}
+
+/* Make timer numbers bright and visible */
+.font-mono {
+  color: #ffffff !important;
+}

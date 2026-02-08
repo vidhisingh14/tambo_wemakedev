@@ -68,7 +68,6 @@ export function SkillAssessment({
                   <div className="w-8 h-8 rounded bg-[#0df2a6] flex items-center justify-center text-[#101010]">
                       <Terminal className="w-5 h-5" />
                   </div>
-                  <span className="text-lg font-bold tracking-tight hidden sm:block">Vidhianusaar</span>
               </div>
               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 bg-[#1E1E1E]/50 dark:bg-[#1E1E1E] px-4 py-1.5 rounded-full border border-gray-200 dark:border-white/10">
                   <Timer className="w-4 h-4 text-[#0df2a6]" />

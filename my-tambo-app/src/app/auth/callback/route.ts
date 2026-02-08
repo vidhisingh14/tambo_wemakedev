@@ -28,6 +28,9 @@ export async function GET(request: Request) {
     await supabase.auth.exchangeCodeForSession(code)
   }
 
+  // Get the origin from the request (works in both dev and production)
+  const origin = requestUrl.origin
+  
   // URL to redirect to after sign in process completes
-  return NextResponse.redirect(new URL('/dashboard', request.url))
+  return NextResponse.redirect(`${origin}/dashboard`)
 }
